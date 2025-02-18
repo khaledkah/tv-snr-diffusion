@@ -2,7 +2,7 @@ Public source code for our paper: Enhancing Diffusion Models Efficiency by Disen
 
 The repository is currently under refactoring! 
 
-The code is based on the original [EDM repo](https://github.com/NVlabs/edm) and can be used in the same way using generate_tv_snr.py to generate samples.
+The computer vision code is based on the original [EDM repo](https://github.com/NVlabs/edm) and can be used in the same way using generate_tv_snr.py to generate samples.
 
 We provide the notebook to generate our toy examples under analytic_score_toy_example.ipynb.
 We add the code for our method in the tv_snr folder.
