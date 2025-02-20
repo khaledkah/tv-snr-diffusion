@@ -13,7 +13,7 @@ python generate_tv_snr.py --outdir=out --snr_schedule sig3 --linear_time --num_s
 ```
 
 ## How to cite
-if you use MoreRed in your research, please cite the corresponding publication:
+if you use TV/SNR in your research, please cite the corresponding publication:
 
 Kahouli, K., Ripken, W., Gugler, S., Unke, O. T., Müller, K. R., & Nakajima, S. (2025). Enhancing Diffusion Models Efficiency by Disentangling Total-Variance and Signal-to-Noise Ratio. arXiv preprint arXiv:2502.08598.
 
