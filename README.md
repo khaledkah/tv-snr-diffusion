@@ -1,7 +1,7 @@
 Public source code for our paper: [TV/SNR - Enhancing Diffusion Models Efficiency by Disentangling Total-Variance and Signal-to-Noise Ratio](https://arxiv.org/abs/2502.08598) 
 
 While the repository is currently being refactored, we will provide the notebook to generate our toy examples under analytic_score_toy_example.ipynb.
-We added the code for our method to the tv_snr folder. The refactored version will be made public during the next few days.
+We added the code for our method to the tv_snr folder. The refactored version will be made public in the coming days.
 
 The computer vision code is based on the original [EDM repo](https://github.com/NVlabs/edm) and can be used in the same way using generate_tv_snr.py to generate samples.
 
