@@ -17,9 +17,9 @@ if you use TV/SNR in your research, please cite the corresponding publication:
 
 Kahouli, K., Ripken, W., Gugler, S., Unke, O. T., Müller, K. R., & Nakajima, S. (2025). Enhancing Diffusion Models Efficiency by Disentangling Total-Variance and Signal-to-Noise Ratio. arXiv preprint arXiv:2502.08598.
 
-    @article{kahouli2025enhancing,
-      title={Enhancing Diffusion Models Efficiency by Disentangling Total-Variance and Signal-to-Noise Ratio},
-      author={Kahouli, Khaled and Ripken, Winfried and Gugler, Stefan and Unke, Oliver T and M{\~A}{\v{z}}ller, Klaus-Robert and Nakajima, Shinichi},
+    @article{kahouli2025disentangling,
+      title={Disentangling Total-Variance and Signal-to-Noise-Ratio Improves Diffusion Models},
+      author={Kahouli, Khaled and Ripken, Winfried and Gugler, Stefan and Unke, Oliver T and M{\"u}ller, Klaus-Robert and Nakajima, Shinichi},
       journal={arXiv preprint arXiv:2502.08598},
       year={2025}
     }
