@@ -19,7 +19,7 @@ class SNR_SDE(SDE):
         snr_sch: SNRSchedule,
         tau: float,
         disc_type: str = "forward",
-        log_deriv: Optional[bool] = False,
+        log_deriv: Optional[bool] = True,
         **kwargs,
     ):
         """
@@ -206,7 +206,7 @@ class Scale_SNR_SDE(SDE):
         snr_sch: SNRSchedule,
         scale_sch: ScaleSchedule,
         disc_type: str = "forward",
-        log_deriv: Optional[bool] = False,
+        log_deriv: Optional[bool] = True,
         **kwargs,
     ):
         """
