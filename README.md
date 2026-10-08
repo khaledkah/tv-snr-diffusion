@@ -1,11 +1,8 @@
 Public source code for our paper: [TV/SNR - Enhancing Diffusion Models Efficiency by Disentangling Total-Variance and Signal-to-Noise Ratio](https://arxiv.org/abs/2502.08598) 
 
-While the repository is currently being refactored, we will provide the notebook to generate our toy examples under analytic_score_toy_example.ipynb.
-We added the code for our method to the tv_snr folder. The refactored version will be made public in the coming days.
+While the repository is currently being refactored, we provide the notebook to generate our toy examples under analytic_score_toy_example.ipynb. The folder tv_snr contains the source code for the TV/SNR framework, which is independent of the data modality. The refactored version, which includes the code for molecular structure generation, will be made public soon.
 
-The computer vision code is based on the original [EDM repo](https://github.com/NVlabs/edm) and can be used in the same way using generate_tv_snr.py to generate samples.
-
-Example command to generate images using our best method:
+The computer vision code is based on the original [EDM repo](https://github.com/NVlabs/edm) and can be used in the same way by using generate_tv_snr.py to generate samples and reproduce the results reported in the paper. Example command to generate images using our best method:
 ```
 python generate_tv_snr.py --outdir=out --snr_schedule sig3 --linear_time --num_steps 64 --tau 1.0 \
     --network=https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/baseline/baseline-cifar10-32x32-uncond-vp.pkl --grid
