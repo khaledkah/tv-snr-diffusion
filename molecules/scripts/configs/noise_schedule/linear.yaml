@@ -1,0 +1,6 @@
+_target_: tv_snr.noise_schedules.LinearSchedule
+beta_start: 0.1
+beta_end: 20.
+discretize: True
+T: ${T}
+dtype: ${dtype}

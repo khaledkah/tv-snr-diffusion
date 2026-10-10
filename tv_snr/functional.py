@@ -3,6 +3,55 @@ from typing import Optional, Tuple
 import torch
 
 
+def batch_center_systems(
+    systems: torch.Tensor, idx_m: torch.Tensor, n_atoms: torch.Tensor, dim: int = 0
+):
+    """
+    center batch of systems moleculewise to have zero center of geometry
+
+    Args:
+        systems (torch.tensor): batch of systems (molecules)
+        idx_m (torch.tensor): the system id for each atom in the batch
+        n_atoms (torch.tensor): number of atoms in each system
+        dim (int): dimension to scatter over
+    """
+    mean = scatter_mean(systems, idx_m, n_atoms, dim=dim)
+    return systems - mean[idx_m]
+
+
+def scatter_mean(
+    systems: torch.Tensor, idx_m: torch.Tensor, n_atoms: torch.Tensor, dim: int = 0
+) -> torch.Tensor:
+    """
+    compute the mean of a batch of systems moleculewise
+
+    Args:
+        systems (torch.Tensor): batch of systems (molecules)
+        idx_m (torch.Tensor): the system id for each atom in the batch
+        n_atoms (torch.Tensor): number of atoms in each system
+        dim (int): dimension to scatter over
+    """
+    # compute the number of atoms per system if not given.
+    if n_atoms is None:
+        _, n_atoms = torch.unique_consecutive(idx_m, return_counts=True)
+
+        if len(n_atoms) != len(torch.unique(idx_m)):  # type: ignore
+            raise ValueError(
+                "idx_m of the same system must be consecutive."
+                " Alternatively, pass n_atoms per system as input."
+            )
+
+    shape = list(systems.shape)
+    shape[dim] = len(torch.unique(idx_m))
+    tmp = torch.zeros(shape, dtype=systems.dtype, device=systems.device)
+    sum = tmp.index_add_(dim, idx_m, systems)
+    if len(sum.shape) == 1:
+        mean = sum / n_atoms
+    else:
+        mean = sum / n_atoms.unsqueeze(-1)
+    return mean
+
+
 def _check_shapes(
     x: torch.Tensor, t: torch.Tensor, t_next: Optional[torch.Tensor] = None
 ) -> Tuple:
@@ -58,25 +107,25 @@ def sample_noise(
     # sample noise
     noise = torch.randn(shape, device=device, dtype=dtype)
 
-    # # The invariance trick: project noise to the zero center of geometry.
-    # if invariant:
-    #     # system-wise center of geometry
-    #     if idx_m is not None:
-    #         # infer n_atoms from idx_m if not passed.
-    #         if n_atoms is None:
-    #             _, n_atoms = torch.unique_consecutive(idx_m, return_counts=True)
+    # The invariance trick: project noise to the zero center of geometry.
+    if invariant:
+        # system-wise center of geometry
+        if idx_m is not None:
+            # infer n_atoms from idx_m if not passed.
+            if n_atoms is None:
+                _, n_atoms = torch.unique_consecutive(idx_m, return_counts=True)
 
-    #             if len(n_atoms) != len(torch.unique(idx_m)):  # type: ignore
-    #                 raise ValueError(
-    #                     "idx_m of the same system must be consecutive."
-    #                     " Alternatively, pass n_atoms per system as input."
-    #                 )
+                if len(n_atoms) != len(torch.unique(idx_m)):  # type: ignore
+                    raise ValueError(
+                        "idx_m of the same system must be consecutive."
+                        " Alternatively, pass n_atoms per system as input."
+                    )
 
-    #         noise = batch_center_systems(noise, idx_m, n_atoms)  # type: ignore
+            noise = batch_center_systems(noise, idx_m, n_atoms)  # type: ignore
 
-    #     # global center of geometry if one system passed.
-    #     else:
-    #         noise -= noise.mean(-2).unsqueeze(-2)
+        # global center of geometry if one system passed.
+        else:
+            noise -= noise.mean(-2).unsqueeze(-2)
 
     return noise
 

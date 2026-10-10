@@ -1,0 +1,20 @@
+# Schedules of the molecular experiments (figure 3 and the appendix tables).
+#
+#   NAME | MODES | FAMILY | HYDRA OVERRIDES FOR scripts/sampling.py
+#
+# MODES  ODE, SDE or ODE,SDE: the panels the paper shows for this schedule
+# FAMILY snr: TV/SNR samplers (sde/snr_euler, sde/snr_heun, sde/dpm_solver)
+#        kve: EDM with its original Karras time grid (sde/euler, sde/heun)
+# The code's SNR is the paper's gamma^2 and slope = 2*eta, shift = 2*kappa,
+# i.e. VP-ISSNR [eta=1, kappa=2] is slope=2, shift=4.
+VP-ISSNR | ODE,SDE | snr | snr_schedule=inverse_sigmoid scale_schedule=constant snr_schedule.slope=2.0 snr_schedule.shift=4.0 snr_schedule.t_min=0.01 snr_schedule.t_max=0.99
+SMLD | ODE | snr | snr_schedule=ve scale_schedule=ve snr_schedule.t_min=0. snr_schedule.t_max=1. snr_schedule.sigma_min=0.002 snr_schedule.sigma_max=30.0
+VP-SMLD | ODE,SDE | snr | snr_schedule=ve scale_schedule=constant snr_schedule.t_min=0. snr_schedule.t_max=1. snr_schedule.sigma_min=0.002 snr_schedule.sigma_max=30.0
+EDM-UT | ODE | snr | snr_schedule=kve scale_schedule=ve snr_schedule.t_min=0. snr_schedule.t_max=1. snr_schedule.sigma_min=0.002 snr_schedule.sigma_max=30.0 snr_schedule.rho=7.0
+VP-EDM-UT | ODE,SDE | snr | snr_schedule=kve scale_schedule=constant snr_schedule.t_min=0. snr_schedule.t_max=1. snr_schedule.sigma_min=0.002 snr_schedule.sigma_max=30.0 snr_schedule.rho=7.0
+EDM | ODE | kve | diffusion_process=sde/kve time_schedule=kve time_schedule.sigma_min=0.002 time_schedule.sigma_max=30.0 time_schedule.rho=7.0
+OTFM | ODE | snr | snr_schedule=inverse_sigmoid scale_schedule=fm snr_schedule.slope=2.0 snr_schedule.shift=0.0 snr_schedule.t_min=0.0001 snr_schedule.t_max=0.995
+VP-OTFM | ODE,SDE | snr | snr_schedule=inverse_sigmoid scale_schedule=constant snr_schedule.slope=2.0 snr_schedule.shift=0.0 snr_schedule.t_min=0.0001 snr_schedule.t_max=0.995
+DDPM-cos-v1.0 | ODE,SDE | snr | snr_schedule=alpha2snr noise_schedule=cos noise_schedule.s=0.008 noise_schedule.v=1.0 scale_schedule=constant snr_schedule.t_min=0.0001 snr_schedule.t_max=0.999
+DDPM-cos-v2.5 | ODE,SDE | snr | snr_schedule=alpha2snr noise_schedule=cos noise_schedule.s=0.008 noise_schedule.v=2.5 scale_schedule=constant snr_schedule.t_min=0.01 snr_schedule.t_max=0.999
+DDPM-linear | ODE,SDE | snr | snr_schedule=alpha2snr noise_schedule=linear noise_schedule.beta_start=0.1 noise_schedule.beta_end=20. scale_schedule=constant snr_schedule.t_min=1e-05 snr_schedule.t_max=1.0

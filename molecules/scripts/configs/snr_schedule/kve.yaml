@@ -1,0 +1,7 @@
+_target_: tv_snr.snr_schedules.KveToSNRSchedule
+t_min: 0.
+t_max: 1.
+rho: 7.
+sigma_min: 0.002
+sigma_max: 30.0
+dtype: ${dtype}

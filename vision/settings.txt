@@ -1,0 +1,264 @@
+# Image experiments of the paper.
+#
+#   DATASET | LABEL | SOLVER | STEPS | FLAGS FOR generate_tv_snr.py
+#
+# Heun uses two network evaluations per step except the last (NFE = 2*STEPS-1);
+# for RK45, STEPS selects the tolerances (see tv_snr_sampler.py).
+# --slope and --shift are 2*eta and 2*kappa of the paper (ISSNR hyperparameter table).
+# ISSNR-BO uses the values of the Bayesian optimization (vision/hyperopt.py).
+
+# CIFAR, Heun: figure 4 (bottom) and table 2
+CIFAR|EDM|heun|2|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|heun|4|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|heun|8|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|heun|16|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|heun|32|--snr_schedule linear --scale_schedule ve
+CIFAR|OTFM|heun|2|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|ISSNR-fixed|heun|2|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|heun|4|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|heun|8|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|heun|16|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|heun|32|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-eta|heun|2|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|heun|4|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|heun|8|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|heun|16|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|heun|32|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-BO|heun|2|--snr_schedule issnr --slope 2.08 --shift -0.126 --scale_schedule constant
+CIFAR|ISSNR-BO|heun|4|--snr_schedule issnr --slope 1.638 --shift 0.704 --scale_schedule constant
+CIFAR|ISSNR-BO|heun|8|--snr_schedule issnr --slope 2.763 --shift 1.315 --scale_schedule constant
+CIFAR|ISSNR-BO|heun|16|--snr_schedule issnr --slope 4.342 --shift -0.932 --scale_schedule constant
+CIFAR|ISSNR-BO|heun|32|--snr_schedule issnr --slope 5.926 --shift 5.228 --scale_schedule constant
+
+# FFHQ, Heun: figure 4 (bottom) and table 2
+FFHQ|EDM|heun|2|--snr_schedule linear --scale_schedule ve
+FFHQ|EDM|heun|4|--snr_schedule linear --scale_schedule ve
+FFHQ|EDM|heun|8|--snr_schedule linear --scale_schedule ve
+FFHQ|EDM|heun|16|--snr_schedule linear --scale_schedule ve
+FFHQ|EDM|heun|32|--snr_schedule linear --scale_schedule ve
+FFHQ|OTFM|heun|2|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|ISSNR-fixed|heun|2|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+FFHQ|ISSNR-fixed|heun|4|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+FFHQ|ISSNR-fixed|heun|8|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+FFHQ|ISSNR-fixed|heun|16|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+FFHQ|ISSNR-fixed|heun|32|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+FFHQ|ISSNR-eta|heun|2|--snr_schedule issnr --eta_scaling --scale_schedule constant
+FFHQ|ISSNR-eta|heun|4|--snr_schedule issnr --eta_scaling --scale_schedule constant
+FFHQ|ISSNR-eta|heun|8|--snr_schedule issnr --eta_scaling --scale_schedule constant
+FFHQ|ISSNR-eta|heun|16|--snr_schedule issnr --eta_scaling --scale_schedule constant
+FFHQ|ISSNR-eta|heun|32|--snr_schedule issnr --eta_scaling --scale_schedule constant
+FFHQ|ISSNR-BO|heun|2|--snr_schedule issnr --slope 3.523 --shift -1.561 --scale_schedule constant
+FFHQ|ISSNR-BO|heun|4|--snr_schedule issnr --slope 1.701 --shift -0.105 --scale_schedule constant
+FFHQ|ISSNR-BO|heun|8|--snr_schedule issnr --slope 2.622 --shift 1.366 --scale_schedule constant
+FFHQ|ISSNR-BO|heun|16|--snr_schedule issnr --slope 3.525 --shift 0.018 --scale_schedule constant
+FFHQ|ISSNR-BO|heun|32|--snr_schedule issnr --slope 3.572 --shift -0.666 --scale_schedule constant
+
+# CIFAR, Heun: exploding/modulated TV vs. constant TV (figure 4 top-right, appendix)
+CIFAR|EDM-UT|heun|4|--snr_schedule kve --scale_schedule ve
+CIFAR|EDM-UT|heun|8|--snr_schedule kve --scale_schedule ve
+CIFAR|EDM-UT|heun|16|--snr_schedule kve --scale_schedule ve
+CIFAR|EDM-UT|heun|32|--snr_schedule kve --scale_schedule ve
+CIFAR|EDM-UT|heun|64|--snr_schedule kve --scale_schedule ve
+CIFAR|EDM-UT|heun|128|--snr_schedule kve --scale_schedule ve
+CIFAR|VP-EDM-UT|heun|4|--snr_schedule kve --scale_schedule constant
+CIFAR|VP-EDM-UT|heun|8|--snr_schedule kve --scale_schedule constant
+CIFAR|VP-EDM-UT|heun|16|--snr_schedule kve --scale_schedule constant
+CIFAR|VP-EDM-UT|heun|32|--snr_schedule kve --scale_schedule constant
+CIFAR|VP-EDM-UT|heun|64|--snr_schedule kve --scale_schedule constant
+CIFAR|VP-EDM-UT|heun|128|--snr_schedule kve --scale_schedule constant
+CIFAR|SMLD|heun|4|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|heun|8|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|heun|16|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|heun|32|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|heun|64|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|heun|128|--snr_schedule ve --scale_schedule ve
+CIFAR|VP-SMLD|heun|4|--snr_schedule ve --scale_schedule constant
+CIFAR|VP-SMLD|heun|8|--snr_schedule ve --scale_schedule constant
+CIFAR|VP-SMLD|heun|16|--snr_schedule ve --scale_schedule constant
+CIFAR|VP-SMLD|heun|32|--snr_schedule ve --scale_schedule constant
+CIFAR|VP-SMLD|heun|64|--snr_schedule ve --scale_schedule constant
+CIFAR|VP-SMLD|heun|128|--snr_schedule ve --scale_schedule constant
+CIFAR|OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|64|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|heun|128|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|VP-OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+CIFAR|VP-OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+CIFAR|VP-OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+CIFAR|VP-OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+CIFAR|VP-OTFM|heun|64|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+CIFAR|VP-OTFM|heun|128|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+
+# FFHQ, Heun: exploding/modulated TV vs. constant TV (figure 4 top-right, appendix)
+FFHQ|EDM-UT|heun|4|--snr_schedule kve --scale_schedule ve
+FFHQ|EDM-UT|heun|8|--snr_schedule kve --scale_schedule ve
+FFHQ|EDM-UT|heun|16|--snr_schedule kve --scale_schedule ve
+FFHQ|EDM-UT|heun|32|--snr_schedule kve --scale_schedule ve
+FFHQ|EDM-UT|heun|64|--snr_schedule kve --scale_schedule ve
+FFHQ|EDM-UT|heun|128|--snr_schedule kve --scale_schedule ve
+FFHQ|VP-EDM-UT|heun|4|--snr_schedule kve --scale_schedule constant
+FFHQ|VP-EDM-UT|heun|8|--snr_schedule kve --scale_schedule constant
+FFHQ|VP-EDM-UT|heun|16|--snr_schedule kve --scale_schedule constant
+FFHQ|VP-EDM-UT|heun|32|--snr_schedule kve --scale_schedule constant
+FFHQ|VP-EDM-UT|heun|64|--snr_schedule kve --scale_schedule constant
+FFHQ|VP-EDM-UT|heun|128|--snr_schedule kve --scale_schedule constant
+FFHQ|SMLD|heun|4|--snr_schedule ve --scale_schedule ve
+FFHQ|SMLD|heun|8|--snr_schedule ve --scale_schedule ve
+FFHQ|SMLD|heun|16|--snr_schedule ve --scale_schedule ve
+FFHQ|SMLD|heun|32|--snr_schedule ve --scale_schedule ve
+FFHQ|SMLD|heun|64|--snr_schedule ve --scale_schedule ve
+FFHQ|SMLD|heun|128|--snr_schedule ve --scale_schedule ve
+FFHQ|VP-SMLD|heun|4|--snr_schedule ve --scale_schedule constant
+FFHQ|VP-SMLD|heun|8|--snr_schedule ve --scale_schedule constant
+FFHQ|VP-SMLD|heun|16|--snr_schedule ve --scale_schedule constant
+FFHQ|VP-SMLD|heun|32|--snr_schedule ve --scale_schedule constant
+FFHQ|VP-SMLD|heun|64|--snr_schedule ve --scale_schedule constant
+FFHQ|VP-SMLD|heun|128|--snr_schedule ve --scale_schedule constant
+FFHQ|OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|64|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|OTFM|heun|128|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+FFHQ|VP-OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+FFHQ|VP-OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+FFHQ|VP-OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+FFHQ|VP-OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+FFHQ|VP-OTFM|heun|64|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+FFHQ|VP-OTFM|heun|128|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule constant
+
+# AFHQ, Heun: other datasets (appendix)
+AFHQ|EDM|heun|2|--snr_schedule linear --scale_schedule ve
+AFHQ|EDM|heun|4|--snr_schedule linear --scale_schedule ve
+AFHQ|EDM|heun|8|--snr_schedule linear --scale_schedule ve
+AFHQ|EDM|heun|16|--snr_schedule linear --scale_schedule ve
+AFHQ|EDM|heun|32|--snr_schedule linear --scale_schedule ve
+AFHQ|OTFM|heun|2|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+AFHQ|OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+AFHQ|OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+AFHQ|OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+AFHQ|OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+AFHQ|ISSNR-fixed|heun|2|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+AFHQ|ISSNR-fixed|heun|4|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+AFHQ|ISSNR-fixed|heun|8|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+AFHQ|ISSNR-fixed|heun|16|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+AFHQ|ISSNR-fixed|heun|32|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+AFHQ|ISSNR-eta|heun|2|--snr_schedule issnr --eta_scaling --scale_schedule constant
+AFHQ|ISSNR-eta|heun|4|--snr_schedule issnr --eta_scaling --scale_schedule constant
+AFHQ|ISSNR-eta|heun|8|--snr_schedule issnr --eta_scaling --scale_schedule constant
+AFHQ|ISSNR-eta|heun|16|--snr_schedule issnr --eta_scaling --scale_schedule constant
+AFHQ|ISSNR-eta|heun|32|--snr_schedule issnr --eta_scaling --scale_schedule constant
+AFHQ|ISSNR-BO|heun|2|--snr_schedule issnr --slope 6.42 --shift -5.16 --scale_schedule constant
+AFHQ|ISSNR-BO|heun|4|--snr_schedule issnr --slope 2.06 --shift -1.38 --scale_schedule constant
+AFHQ|ISSNR-BO|heun|8|--snr_schedule issnr --slope 3.14 --shift -0.08 --scale_schedule constant
+AFHQ|ISSNR-BO|heun|16|--snr_schedule issnr --slope 4.3 --shift -1.64 --scale_schedule constant
+AFHQ|ISSNR-BO|heun|32|--snr_schedule issnr --slope 4.3 --shift -1.64 --scale_schedule constant
+
+# imagenet, Heun: other datasets (appendix)
+imagenet|EDM|heun|2|--snr_schedule linear --scale_schedule ve
+imagenet|EDM|heun|4|--snr_schedule linear --scale_schedule ve
+imagenet|EDM|heun|8|--snr_schedule linear --scale_schedule ve
+imagenet|EDM|heun|16|--snr_schedule linear --scale_schedule ve
+imagenet|EDM|heun|32|--snr_schedule linear --scale_schedule ve
+imagenet|OTFM|heun|2|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+imagenet|OTFM|heun|4|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+imagenet|OTFM|heun|8|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+imagenet|OTFM|heun|16|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+imagenet|OTFM|heun|32|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+imagenet|ISSNR-fixed|heun|2|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+imagenet|ISSNR-fixed|heun|4|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+imagenet|ISSNR-fixed|heun|8|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+imagenet|ISSNR-fixed|heun|16|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+imagenet|ISSNR-fixed|heun|32|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+imagenet|ISSNR-eta|heun|2|--snr_schedule issnr --eta_scaling --scale_schedule constant
+imagenet|ISSNR-eta|heun|4|--snr_schedule issnr --eta_scaling --scale_schedule constant
+imagenet|ISSNR-eta|heun|8|--snr_schedule issnr --eta_scaling --scale_schedule constant
+imagenet|ISSNR-eta|heun|16|--snr_schedule issnr --eta_scaling --scale_schedule constant
+imagenet|ISSNR-eta|heun|32|--snr_schedule issnr --eta_scaling --scale_schedule constant
+imagenet|ISSNR-BO|heun|2|--snr_schedule issnr --slope 6.3 --shift -4.88 --scale_schedule constant
+imagenet|ISSNR-BO|heun|4|--snr_schedule issnr --slope 1.7 --shift -0.1 --scale_schedule constant
+imagenet|ISSNR-BO|heun|8|--snr_schedule issnr --slope 1.8 --shift -0.18 --scale_schedule constant
+imagenet|ISSNR-BO|heun|16|--snr_schedule issnr --slope 3.64 --shift 0.08 --scale_schedule constant
+imagenet|ISSNR-BO|heun|32|--snr_schedule issnr --slope 3.86 --shift -0.78 --scale_schedule constant
+
+# CIFAR, Euler: solvers (appendix)
+CIFAR|EDM|euler|3|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|euler|7|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|euler|15|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|euler|31|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|euler|63|--snr_schedule linear --scale_schedule ve
+CIFAR|OTFM|euler|3|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|euler|7|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|euler|15|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|euler|31|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|euler|63|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|ISSNR-fixed|euler|3|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|euler|7|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|euler|15|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|euler|31|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|euler|63|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-eta|euler|3|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|euler|7|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|euler|15|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|euler|31|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|euler|63|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-BO|euler|3|--snr_schedule issnr --slope 4.3 --shift 2.1 --scale_schedule constant
+CIFAR|ISSNR-BO|euler|7|--snr_schedule issnr --slope 1.94 --shift 0.52 --scale_schedule constant
+CIFAR|ISSNR-BO|euler|15|--snr_schedule issnr --slope 2.0 --shift 0.0 --scale_schedule constant
+CIFAR|ISSNR-BO|euler|31|--snr_schedule issnr --slope 1.76 --shift 0.26 --scale_schedule constant
+CIFAR|ISSNR-BO|euler|63|--snr_schedule issnr --slope 1.84 --shift 0.58 --scale_schedule constant
+
+# CIFAR, RK45: solvers (appendix); the steps set the tolerances
+CIFAR|EDM|rk45|0|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|rk45|1|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|rk45|2|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|rk45|3|--snr_schedule linear --scale_schedule ve
+CIFAR|OTFM|rk45|0|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|rk45|1|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|rk45|2|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|rk45|3|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|ISSNR-fixed|rk45|0|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|rk45|1|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|rk45|2|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|rk45|3|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-eta|rk45|0|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|rk45|1|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|rk45|2|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|rk45|3|--snr_schedule issnr --eta_scaling --scale_schedule constant
+
+# CIFAR, DPM-Solver-3: solvers (appendix)
+CIFAR|EDM|dpm|3|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|dpm|7|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|dpm|15|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|dpm|31|--snr_schedule linear --scale_schedule ve
+CIFAR|EDM|dpm|63|--snr_schedule linear --scale_schedule ve
+CIFAR|SMLD|dpm|3|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|dpm|7|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|dpm|15|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|dpm|31|--snr_schedule ve --scale_schedule ve
+CIFAR|SMLD|dpm|63|--snr_schedule ve --scale_schedule ve
+CIFAR|OTFM|dpm|3|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|dpm|7|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|dpm|15|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|dpm|31|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|OTFM|dpm|63|--snr_schedule issnr --slope 2 --shift 0 --scale_schedule fm
+CIFAR|ISSNR-fixed|dpm|3|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|dpm|7|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|dpm|15|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|dpm|31|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-fixed|dpm|63|--snr_schedule issnr --slope 3 --shift 2 --scale_schedule constant
+CIFAR|ISSNR-eta|dpm|3|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|dpm|7|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|dpm|15|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|dpm|31|--snr_schedule issnr --eta_scaling --scale_schedule constant
+CIFAR|ISSNR-eta|dpm|63|--snr_schedule issnr --eta_scaling --scale_schedule constant

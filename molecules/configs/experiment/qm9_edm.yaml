@@ -1,0 +1,24 @@
+# @package _global_
+
+# Second denoiser (appendix): trained on the EDM SNR schedule with tau(t) = 1.
+
+defaults:
+  - qm9_poly
+
+run:
+  experiment: qm9_edm
+
+globals:
+  edm_snr_schedule:
+    _target_: tv_snr.snr_schedules.KveToSNRSchedule
+    t_min: 0.
+    t_max: 1.
+    sigma_min: 0.002
+    sigma_max: 30.0
+    rho: 7.0
+    dtype: float64
+  snr_schedule: ${globals.edm_snr_schedule}
+
+  time_sampler:
+    a: 0.
+    b: 1.

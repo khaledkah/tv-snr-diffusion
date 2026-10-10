@@ -1,11 +1,9 @@
 import logging
 from functools import partial
-from typing import Callable, Optional
+from typing import Callable
 
 import torch
-from torch import nn
-
-from .noise_schedules import NoiseSchedule
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +21,21 @@ def ve_schedule(
         sigma_max: maximum std.
     """
     return sigma_min**2 * (sigma_max**2 / sigma_min**2) ** i
+
+
+def inverse_ve_schedule(
+    sigma_2: torch.Tensor, sigma_min: float = 0.002, sigma_max: float = 30.0
+) -> torch.Tensor:
+    """
+    Inverse of the original Variance Exploding schedule from Song et al. 2021
+
+    Args:
+        sigma: std.
+        sigma_min: minimum std.
+        sigma_max: maximum std.
+    """
+    r = (sigma_max**2) / (sigma_min**2)
+    return torch.log(sigma_2 / (sigma_min**2)) / np.log(r)
 
 
 def kve_schedule(
@@ -44,18 +57,15 @@ def kve_schedule(
     ) ** rho
 
 
-def linear_schedule(
-    i: torch.Tensor, epsilon_start: float = 1e-2, epsilon_end: float = 0.975
+def inverse_kve_schedule(
+    sigma: torch.Tensor,
+    sigma_min: float = 0.002,
+    sigma_max: float = 30.0,
+    rho: float = 7.0,
 ) -> torch.Tensor:
-    """
-    Linear schedule with clipping at boundaries.
-
-    Args:
-        i: index of time step in [0.,1.].
-        epsilon_start: start of linear schedule.
-        epsilon_end: end of linear schedule
-    """
-    return i * epsilon_end + epsilon_start
+    A = sigma_max ** (1 / rho)
+    B = sigma_min ** (1 / rho)
+    return 1 - (sigma ** (1 / rho) - A) / (B - A)
 
 
 class TimeSchedule:
@@ -206,233 +216,3 @@ class KVeSchedule(TimeSchedule):
         Pre-compute sigmas from pre-computed time steps.
         """
         return time_steps.clone()
-
-
-class LinearTimeSchedule(TimeSchedule):
-    def __init__(
-        self,
-        T: int,
-        **kwargs,
-    ):
-        super().__init__(
-            time_fn=lambda i: (i+1) / T,
-            T = T,
-            **kwargs
-        )
-
-    def pre_compute_sigmas(self, time_steps: torch.Tensor) -> torch.Tensor:
-        """
-        This should not be called or used.
-        """
-        return time_steps.clone()
-
-
-class VeSchedule(TimeSchedule):
-    """
-    Wrapper class for ``ve_schedule``.
-    """
-
-    def __init__(self, sigma_min: float = 0.002, sigma_max: float = 30.0, **kwargs):
-        """
-        sigma_min: minimum std.
-        sigma_max: maximum std.
-        """
-        super().__init__(
-            time_fn=partial(ve_schedule, sigma_min=sigma_min, sigma_max=sigma_max),
-            **kwargs,
-        )
-
-    def pre_compute_sigmas(self, time_steps: torch.Tensor) -> torch.Tensor:
-        """
-        Pre-compute sigmas from pre-computed time steps.
-        """
-        return time_steps**0.5
-
-
-class MVpLinearSchedule(TimeSchedule):
-    """
-    Linear time schedule for Markov derived VP diffusion.
-    """
-
-    def __init__(
-        self,
-        epsilon_start: float = 1e-2,
-        epsilon_end: float = 0.975,
-        noise_sch: Optional[NoiseSchedule] = None,
-        **kwargs,
-    ):
-        """
-        epsilon_start: start of linear schedule.
-        epsilon_end: end of linear schedule
-        """
-        self.noise_sch = noise_sch
-
-        super().__init__(
-            time_fn=partial(
-                linear_schedule, epsilon_start=epsilon_start, epsilon_end=epsilon_end
-            ),
-            **kwargs,
-        )
-
-    def pre_compute_sigmas(self, time_steps: torch.Tensor) -> torch.Tensor:
-        """
-        Pre-compute sigmas from pre-computed time steps.
-        """
-        if self.noise_sch is not None:
-            return torch.sqrt(
-                1 - self.noise_sch.alphas_bar_fn(time_steps, discretize=False)
-            )
-        else:
-            logger.warning(
-                "Noise schedule not set for the time schedule."
-                "Returning None for sigmas."
-            )
-            return None  # type: ignore
-
-
-class AdaptiveKVeSchedule(nn.Module):
-    """
-    Wrapper class for ``kve_schedule`` with adaptive maximal variance.
-    """
-
-    def __init__(
-        self,
-        T: int,
-        sigma_max: torch.Tensor,
-        sigma_min: float = 0.002,
-        rho: float = 7.0,
-        dtype: torch.dtype = torch.float64,
-    ):
-        """
-        T: number of discretization steps.
-        sigma_min: minimum std.
-        sigma_max: maximum std.
-        rho: steepness of exponential variance.
-        dtype: data type to use for computation accuracy.
-        """
-        super().__init__()
-        self.T = T
-        self.sigma_max = sigma_max
-        self.sigma_min = sigma_min
-        self.rho = rho
-        self.dtype = dtype
-
-        if isinstance(dtype, str):
-            if dtype == "float64":
-                self.dtype = torch.float64
-            elif dtype == "float32":
-                self.dtype = torch.float32
-            else:
-                raise ValueError(f"data type must be float32 or float64, got {dtype}")
-
-    def forward(self, i: torch.Tensor) -> torch.Tensor:
-        """
-        Get the time step at index i.
-
-        Args:
-            i: index of time step in [0.,1.].
-                or integer index if discretized schedule used,
-                starting at 0 for diffusion step 1 until T-1.
-        """
-        if not isinstance(i, torch.Tensor):
-            raise ValueError("i must be a torch.Tensor.")
-
-        if len(i.shape) == 0:
-            i = i.reshape(1)
-
-        # use continous schedule
-        if i.dtype in [torch.int, torch.long]:
-            i = i.to(torch.float64) / (self.T - 1)
-
-        if (
-            i.dtype not in [torch.float, torch.double]
-            or (i < 0.0).any()
-            or (i > 1.0).any()
-        ):
-            raise ValueError(
-                "i must be a float or double in [0.,1.] if continous schedule used."
-            )
-
-        t = kve_schedule(
-            i.to(torch.float64).squeeze(-1),
-            sigma_min=self.sigma_min,
-            sigma_max=self.sigma_max,  # type: ignore
-            rho=self.rho,
-        )
-
-        if len(t.shape) < len(i.shape):
-            t = t.unsqueeze(-1)
-
-        return t.to(self.dtype)
-
-
-class AdaptiveVeSchedule(nn.Module):
-    """
-    Wrapper class for ``ve_schedule`` with adaptive maximal variance.
-    """
-
-    def __init__(
-        self,
-        T: int,
-        sigma_max: torch.Tensor,
-        sigma_min: float = 0.002,
-        dtype: torch.dtype = torch.float64,
-    ):
-        """
-        T: number of discretization steps.
-        sigma_min: minimum std.
-        sigma_max: maximum std.
-        dtype: data type to use for computation accuracy.
-        """
-        super().__init__()
-        self.T = T
-        self.sigma_max = sigma_max
-        self.sigma_min = sigma_min
-        self.dtype = dtype
-
-        if isinstance(dtype, str):
-            if dtype == "float64":
-                self.dtype = torch.float64
-            elif dtype == "float32":
-                self.dtype = torch.float32
-            else:
-                raise ValueError(f"data type must be float32 or float64, got {dtype}")
-
-    def forward(self, i: torch.Tensor) -> torch.Tensor:
-        """
-        Get the time step at index i.
-
-        Args:
-            i: index of time step in [0.,1.].
-                or integer index if discretized schedule used,
-                starting at 0 for diffusion step 1 until T-1.
-        """
-        if not isinstance(i, torch.Tensor):
-            raise ValueError("i must be a torch.Tensor.")
-
-        if len(i.shape) == 0:
-            i = i.reshape(1)
-
-        # use continous schedule
-        if i.dtype in [torch.int, torch.long]:
-            i = i.to(torch.float64) / (self.T - 1)
-
-        if (
-            i.dtype not in [torch.float, torch.double]
-            or (i < 0.0).any()
-            or (i > 1.0).any()
-        ):
-            raise ValueError(
-                "i must be a float or double in [0.,1.] if continous schedule used."
-            )
-
-        t = ve_schedule(
-            i.to(torch.float64).squeeze(-1),
-            sigma_min=self.sigma_min,
-            sigma_max=self.sigma_max,  # type: ignore
-        )
-
-        if len(t.shape) < len(i.shape):
-            t = t.unsqueeze(-1)
-
-        return t.to(self.dtype)

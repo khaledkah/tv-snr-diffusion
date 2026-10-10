@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tv-snr"
+version = "1.0.0"
+description = "TV/SNR: disentangling total variance and signal-to-noise ratio in diffusion models"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["torch", "numpy", "scipy", "tqdm"]
+
+[project.optional-dependencies]
+vision = ["click", "pillow", "requests", "matplotlib", "wandb"]
+molecules = [
+    "schnetpack==2.0.4",
+    "hydra-core",
+    "ase",
+    "rdkit",
+    "openbabel-wheel",
+    "matplotlib",
+]
+
+[tool.setuptools]
+packages = ["tv_snr", "tvsnr_mol", "tvsnr_mol.sampling"]
+
+[tool.setuptools.package-dir]
+tv_snr = "tv_snr"
+tvsnr_mol = "molecules/tvsnr_mol"

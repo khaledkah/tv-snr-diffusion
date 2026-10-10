@@ -1,0 +1,4 @@
+_target_: tv_snr.scale_schedules.ConstScale
+constant: 1.0
+snr_schedule: ${snr_schedule}
+dtype: ${dtype}

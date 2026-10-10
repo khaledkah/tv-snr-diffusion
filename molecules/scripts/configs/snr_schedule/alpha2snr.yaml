@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /noise_schedule: ???
+
+noise_schedule:
+  discretize: False
+
+snr_schedule:
+  _target_: tv_snr.snr_schedules.NoiseToSNRSchedule
+  noise_schedule: ${noise_schedule}
+  t_min: 1e-5
+  t_max: .999

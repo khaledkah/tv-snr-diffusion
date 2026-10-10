@@ -1,0 +1,19 @@
+_target_: schnetpack.datasets.QM9
+
+datapath: ${paths.data_dir}/qm9.db
+split_file: ${paths.data_dir}/split.npz
+
+transforms:
+  - _target_: schnetpack.transform.CastTo64
+  - _target_: schnetpack.transform.SubtractCenterOfGeometry
+
+batch_size: 128
+num_train: 55000
+num_val: 10000
+num_workers: 4
+
+remove_uncharacterized: True
+distance_unit: Ang
+pin_memory: True
+load_properties:
+  - energy_U0

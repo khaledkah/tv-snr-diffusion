@@ -1,0 +1,7 @@
+# VP-ISSNR with eta=1, kappa=2 (slope = 2*eta, shift = 2*kappa)
+_target_: tv_snr.snr_schedules.InverseSigmoid
+t_min: 0.01
+t_max: 0.99
+slope: 2.
+shift: 4.
+dtype: ${dtype}

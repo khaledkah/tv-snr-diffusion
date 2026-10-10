@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - /sampler/base
+  - /time_schedule: ???
+
+sampler:
+  _target_: tvsnr_mol.sampling.Euler
+  time_schedule: ${time_schedule}
+  out_var_scaler: ${data_var}
+  snr_key: "gamma"
+  std_key: "sigma"
+  scale_input: True
+  max_stoch_std: 1.
+  min_stoch_std: 0.
+  clip_stoch_std: False
+  selected_stoch: True
+  end_deterministic: True
+  

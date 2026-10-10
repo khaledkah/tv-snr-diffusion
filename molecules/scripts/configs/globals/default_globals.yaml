@@ -1,0 +1,11 @@
+# @package _global_
+
+T: ???
+stochastic: False
+
+dtype: float64
+max_steps: null
+start: null
+
+paths:
+  denoiser_path: ??? # Path to the denoiser model

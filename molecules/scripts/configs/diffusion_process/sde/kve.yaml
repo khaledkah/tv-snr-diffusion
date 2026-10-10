@@ -1,0 +1,13 @@
+forward_process:
+  _target_: tv_snr.sdes.KVeSDE
+  sigma_min: ${time_schedule.sigma_min}
+  sigma_max: ${time_schedule.sigma_max}
+  invariant: True
+  dtype: ${dtype}
+
+reverse_process:
+  _target_: tv_snr.sdes.RevSDE
+  forward_process: ${diffusion_process.forward_process}
+  stochastic: ${stochastic}
+  invariant: ${diffusion_process.forward_process.invariant}
+  dtype: ${dtype}
