@@ -1,0 +1,18 @@
+defaults:
+  - optimizer: adam
+
+_target_: tvsnr_mol.task.DiffusionTask
+outputs: ???
+warmup_steps: 0
+
+# schnetpack.train.ReduceLROnPlateau with smoothing_factor=0
+scheduler_cls: torch.optim.lr_scheduler.ReduceLROnPlateau
+scheduler_monitor: val_loss
+scheduler_args:
+  mode: min
+  factor: 0.5
+  patience: 100
+  threshold: 0.0
+  threshold_mode: rel
+  cooldown: 10
+  min_lr: 0.0

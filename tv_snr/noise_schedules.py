@@ -150,7 +150,9 @@ def inverse_cosine_decay(sqrt_beta_bar: torch.Tensor, s: float = 0.008, v: float
     """
     alpha_bar = 1 - sqrt_beta_bar.to(torch.float64) ** 2
     f_0 = torch.cos((torch.tensor(0) ** v + s) / (1 + s) * torch.pi * 0.5) ** 2
-    t = torch.acos(torch.sqrt(alpha_bar * f_0)) * 2 * (1 + s) / torch.pi - s
+    t = (torch.acos(torch.sqrt(alpha_bar * f_0)) * 2 * (1 + s) / torch.pi - s) ** (
+        1 / v
+    )
 
     return t.to(sqrt_beta_bar.dtype)
 

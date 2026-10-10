@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - /sampler/base
+  - /snr_schedule: inverse_sigmoid
+  - /scale_schedule: constant
+  - override /diffusion_process: sde/scale_snr
+
+stochastic: False
+order: 3
+denoise_to_zero: False
+
+sampler:
+  _target_: tvsnr_mol.sampling.DPMSolver
+  T: ${T}
+  out_var_scaler: ${data_var}
+  scale_input: True
+  snr_key: "gamma"
+  max_stoch_std: 1.
+  min_stoch_std: 0.
+  clip_stoch_std: False
+  selected_stoch: False
+  end_deterministic: False

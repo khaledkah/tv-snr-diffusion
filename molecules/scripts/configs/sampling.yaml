@@ -1,0 +1,37 @@
+# @package _global_
+
+defaults:
+  - run: default_run
+  - globals: default_globals
+  - data: qm9
+  - sampler: sde/snr_euler
+
+data_var: 2.0  # variance of the target data distribution
+diff_t: null # sample form prior (scratch)
+split: "test"
+compute_metrics: true
+num_samples: 2560  # dividable by 256 (for variable batch size 32-256)
+save_as_tensors: false
+
+order: null  # order of the solver (needed only for DPMSolver)
+atol: null  # absolute tolerance for RK solvers
+rtol: null  # relative tolerance for RK solvers
+
+seed: null
+
+paths:
+  data_dir: ${hydra:runtime.cwd}/data
+  save_dir: ???  # Where to save the results
+  file_base_name: ??? # Base name for the saved files under save_dir
+
+run:
+  dir: ${hydra:runtime.cwd}/runs/sampling/${run.id}
+
+hydra:
+  searchpath:
+    - file://${oc.env:PWD}
+    - file://${oc.env:PWD}/configs
+  job:
+    chdir: True
+  run:
+    dir: ${run.dir}

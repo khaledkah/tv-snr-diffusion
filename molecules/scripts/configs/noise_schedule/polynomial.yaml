@@ -1,0 +1,6 @@
+_target_: tv_snr.noise_schedules.PolynomialSchedule
+s: 1e-5
+power: 2.0
+discretize: True
+T: ${T}
+dtype: ${dtype}

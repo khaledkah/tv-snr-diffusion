@@ -1,0 +1,15 @@
+forward_process:
+  _target_: tv_snr.snr.Scale_SNR_SDE
+  snr_sch: ${snr_schedule}
+  scale_sch: ${scale_schedule}
+  disc_type: forward  # ["forward", "midpoint", "avg", "difference"]
+  log_deriv: True
+  invariant: True
+  dtype: ${dtype}
+
+reverse_process:
+  _target_: tv_snr.sdes.RevSDE
+  forward_process: ${diffusion_process.forward_process}
+  stochastic: ${stochastic}
+  invariant: ${diffusion_process.forward_process.invariant}
+  dtype: ${dtype}

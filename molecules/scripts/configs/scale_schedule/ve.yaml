@@ -1,0 +1,3 @@
+_target_: tv_snr.scale_schedules.VeScale
+snr_schedule: ${snr_schedule}
+dtype: ${dtype}

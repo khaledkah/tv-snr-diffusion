@@ -1,0 +1,146 @@
+# @package _global_
+
+# Denoiser used for all molecular results: trained on the polynomial noise schedule
+# with tau(t) = 1, and conditioned on the scaled log-SNR.
+
+defaults:
+  - override /model: nnp
+  - override /data: qm9
+  - override /task: diffusion_task
+  - override /callbacks:
+    - checkpoint
+    - earlystopping
+    - lrmonitor
+    - ema
+
+run:
+  experiment: qm9_poly
+
+globals:
+  cutoff: 10.
+  lr: 1e-4
+  n_atom_basis: 256
+  std_key: "sigma"
+  snr_key: "gamma"
+  target_key: eps
+  output_key: eps_pred
+  time_target_key: t
+
+  noise_schedule:
+    _target_: tv_snr.noise_schedules.PolynomialSchedule
+    s: 1e-5
+    discretize: False
+    T: null
+    variance_type: lower_bound
+    dtype: float64
+
+  snr_schedule:
+    _target_: tv_snr.snr_schedules.NoiseToSNRSchedule
+    noise_schedule: ${globals.noise_schedule}
+    t_min: 1e-5
+    t_max: 1.0
+    dtype: float64
+
+  time_sampler:
+    _target_: tvsnr_mol.transforms.UniformContinuous
+    a: 1e-5
+    b: 1.
+
+  diffusion_process:
+    _target_: tv_snr.snr.Scale_SNR_SDE
+    snr_sch: ${globals.snr_schedule}
+    scale_sch:
+      _target_: tv_snr.scale_schedules.ConstScale
+      snr_schedule: ${globals.snr_schedule}
+      constant: 1.0
+      dtype: float64
+    noise_key: ${globals.target_key}
+    invariant: True
+    dtype: float64
+
+trainer:
+  precision: 32
+  gradient_clip_val: 1.0
+
+callbacks:
+  early_stopping:
+    patience: 200
+    check_finite: False
+  ema:
+    decay: 0.999
+
+data:
+  batch_size: 128
+  num_train: 55000
+  num_val: 10000
+  num_test: 10000
+  split_file: ${run.data_dir}/split.npz
+  num_workers: 4
+  pin_memory: True
+  distance_unit: Ang
+  load_properties:
+    - energy_U0
+  transforms:
+    - _target_: schnetpack.transform.CastTo64
+    - _target_: schnetpack.transform.SubtractCenterOfGeometry
+
+    - _target_: tvsnr_mol.transforms.Diffuse
+      diffuse_property: _positions
+      diffusion_process: ${globals.diffusion_process}
+      time_sampler: ${globals.time_sampler}
+      std_key: ${globals.std_key}
+      snr_key: ${globals.snr_key}
+      var_scaler: 2.0
+      atomwise: True
+
+    - _target_: tvsnr_mol.transforms.AllToAllNeighborList
+    - _target_: schnetpack.transform.CastTo32
+
+model:
+  representation:
+    radial_basis:
+      _target_: schnetpack.nn.radial.GaussianRBF
+      n_rbf: 40
+      cutoff: ${globals.cutoff}
+    n_atom_basis: ${globals.n_atom_basis}
+    n_interactions: 9
+
+  input_modules:
+    - _target_: schnetpack.atomistic.PairwiseDistances
+    - _target_: tvsnr_mol.model.SNRVarScaling
+      input_key: ${globals.snr_key}
+      scale: -0.125
+      shift: 0.35
+
+  output_modules:
+    - _target_: tvsnr_mol.model.TimeAwareEquivariant
+      n_in: ${globals.n_atom_basis}
+      n_hidden: null
+      n_layers: 3
+      output_key: ${globals.output_key}
+      include_time: True
+      time_key: ${globals.time_target_key}
+
+  do_postprocessing: True
+  postprocessors:
+    - _target_: tvsnr_mol.transforms.BatchSubtractCenterOfMass
+      name: ${globals.output_key}
+    - _target_: schnetpack.transform.CastTo64
+
+task:
+  diffuse_property: _positions
+  skip_exploding_batches: True
+  time_key: ${globals.time_target_key}
+  noise_key: ${globals.target_key}
+  noise_pred_key: ${globals.output_key}
+  outputs:
+    - _target_: tvsnr_mol.task.DiffModelOutput
+      name: ${globals.output_key}
+      target_property: ${globals.target_key}
+      loss_fn:
+        _target_: torch.nn.MSELoss
+      metrics:
+        mse:
+          _target_: torchmetrics.regression.MeanSquaredError
+          squared: True
+      loss_weight: 1.0

@@ -1,0 +1,6 @@
+_target_: tv_snr.snr_schedules.VeToSNRSchedule
+t_min: 0.
+t_max: 1.
+sigma_min: 0.002
+sigma_max: 30.0
+dtype: ${dtype}

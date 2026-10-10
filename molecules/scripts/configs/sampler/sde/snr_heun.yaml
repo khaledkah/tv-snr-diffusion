@@ -1,0 +1,9 @@
+# @package _global_
+
+defaults:
+  - /sampler/sde/snr_euler
+
+stochastic: False
+
+sampler:
+  _target_: tvsnr_mol.sampling.SNRHeun

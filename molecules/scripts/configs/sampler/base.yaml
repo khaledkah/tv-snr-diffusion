@@ -1,0 +1,15 @@
+# @package _global_
+defaults:
+  - /diffusion_process: ???
+
+sampler:
+  reverse_process: ${diffusion_process.reverse_process}
+  denoiser: ${paths.denoiser_path}
+  std_key: sigma
+  noise_pred_key: eps_pred
+  cutoff: null
+  recompute_neighbors: False
+  save_progress: False
+  progress_stride: 1
+  results_on_cpu: True
+  device: null
