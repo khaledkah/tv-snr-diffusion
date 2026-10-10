@@ -1,4 +1,4 @@
-Public source code for our paper: [TV/SNR - Enhancing Diffusion Models Efficiency by Disentangling Total-Variance and Signal-to-Noise Ratio](https://arxiv.org/abs/2502.08598)
+Public source code for our paper: [TV/SNR - Disentangling Total-Variance and Signal-to-Noise-Ratio Improves Diffusion Models](https://arxiv.org/abs/2502.08598)
 
 The repository contains
 
