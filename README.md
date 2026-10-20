@@ -127,6 +127,6 @@ Kahouli, K., Ripken, W., Gugler, S., Unke, O. T., Müller, K. R., & Nakajima, S.
         publisher = {IOP Publishing},
         journal={Machine Learning: Science and Technology},
         doi = {10.1088/2632-2153/aeb69d},
-        url={http://iopscience.iop.org/article/10.1088/2632-2153/aeb69d},
+        url={https://dx.doi.org/10.1088/2632-2153/aeb69d},
         year={2026},
     }
