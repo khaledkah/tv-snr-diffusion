@@ -122,7 +122,7 @@ if you use TV/SNR in your research, please cite the corresponding publication:
 Kahouli, K., Ripken, W., Gugler, S., Unke, O. T., Müller, K. R., & Nakajima, S. (2026). Disentangling total-variance and signal-to-noise-ratio improves diffusion models. Machine Learning: Science and Technology.[doi:10.1088/2632-2153/aeb69d](https://doi.org/10.1088/2632-2153/aeb69d). 
 
     @article{kahouli2026tvsnr,
-        author={Kahouli, Khaled and Ripken, Winfried and Gugler, Stefan and Unke, Oliver T. and Müller, Klaus-Robert and Nakajima, Shinichi},
+        author={Kahouli, Khaled and Ripken, Winfried and Gugler, Stefan and Unke, Oliver T. and M{\"u}ller, Klaus-Robert and Nakajima, Shinichi},
         title={Disentangling total-variance and signal-to-noise-ratio improves diffusion models},
         publisher = {IOP Publishing},
         journal={Machine Learning: Science and Technology},
